@@ -7,7 +7,7 @@ services:
     restart: always # If Any Issue
     ports:
       - "6379:6379" # Input Port - Output Port
-    command: redis-server --loglevel warning # To Start
+    command: redis-server --loglevel warning # Focus on more critical issues, improving performance and reducing log file size.
     volumes:
       - ./docker-volumes/cache:/data #where want to store
 
@@ -72,12 +72,12 @@ services:
       network.host: 0.0.0.0
       transport.host: 127.0.0.1
       http.host: 0.0.0.0
-      xpack.security.enabled: "true"
-      xpack.security.authc.api_key.enabled: "true"
-      xpack.monitoring.collection.enabled: "true"
-      xpack.security.enrollment.enabled: "true"
+      xpack.security.enabled: "true" #security
+      xpack.security.authc.api_key.enabled: "true" #security
+      xpack.monitoring.collection.enabled: "true" #security
+      xpack.security.enrollment.enabled: "true" #security
       xpack.security.authc.token.enabled: "true"
-      ELASTIC_PASSWORD: admin1234
+      ELASTIC_PASSWORD: admin1234 #For Security True need password
     ports:
       - 9300:9300 #To Access in Application
       - 9200:9200
@@ -91,19 +91,19 @@ services:
     image: docker.elastic.co/kibana/kibana:8.11.0
     restart: always
     environment:
-      - ELASTICSEARCH_HOSTS=["http://elasticsearch_container:9200"] #Monitor Elastic Search
-      - ELASTICSEARCH_USERNAME=kibana_system
-      - ELASTICSEARCH_PASSWORD=kibana
-      - ELASTICSEARCH_SERVICEACCOUNT_TOKEN=AAEAAWVsYXN0aWMva2liYW5hL2pvYmJlci1raWJhbmE6NllnejliVnNTakd2TWhScW9Wc18zZw
-      - XPACK_FLEET_AGENTS_ELASTICSEARCH_HOSTS=["http://elasticsearch_container:9200"]
+      - ELASTICSEARCH_HOSTS=["http://elasticsearch_container:9200"] #Monitor Elastic Search. Accessing with container name
+      - ELASTICSEARCH_USERNAME=kibana_system #Creating UserName In Elasticsearch and Use Here
+      - ELASTICSEARCH_PASSWORD=kibana #Creating Password In Elasticsearch and Use Here
+      - ELASTICSEARCH_SERVICEACCOUNT_TOKEN=AAEAAWVsYXN0aWMva2liYW5hL2pvYmJlci1raWJhbmE6NllnejliVnNTakd2TWhScW9Wc18zZw #Created from elastic search
+      - XPACK_FLEET_AGENTS_ELASTICSEARCH_HOSTS=["http://elasticsearch_container:9200"] #For APM Server
     ports:
       - 5601:5601
     networks:
       - elastic
     volumes:
-      - ./kibana.yml/:/usr/share/kibana/config/kibana.yml:ro
+      - ./kibana.yml/:/usr/share/kibana/config/kibana.yml:ro #use our own .yaml file
     depends_on:
       - elasticsearch
-networks:
-  elastic:
+networks: #Creating Common Network the communicate across services
+  elastic: #Use this to use across service
     name: elastic
