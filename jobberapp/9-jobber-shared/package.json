@@ -22,7 +22,7 @@
   "author": "Vengatesh G",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/vengateshganesangv/jobber-shared.git"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"

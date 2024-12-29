@@ -155,5 +155,6 @@ thumb
 sketch
 
 docker-volumes
+secrets.md
 
 # End of https://www.toptal.com/developers/gitignore/api/node,react
