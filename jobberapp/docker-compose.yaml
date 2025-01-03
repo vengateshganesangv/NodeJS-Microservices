@@ -104,6 +104,27 @@ services:
       - ./kibana.yml/:/usr/share/kibana/config/kibana.yml:ro #use our own .yaml file
     depends_on:
       - elasticsearch
+  notifications:
+    container_name: notification_container
+    build:
+      context: ../server/2-notification-service
+      dockerfile: Dockerfile.dev
+    restart: always
+    ports:
+      - 4001:4001
+    env_file: ../server/2-notification-service/.env.dev
+    environment:
+      - ENABLE_APM=0
+      - NODE_ENV=development
+      - CLIENT_URL=http://localhost:3000
+      - RABBITMQ_ENDPOINT=amqp://jobber:jobberpass@rabbitmq_container:5672
+      - SENDER_EMAIL=violet.orn71@ethereal.email
+      - SENDER_EMAIL_PASSWORD=C84XUqUcdhsQPumG2V
+      - ELASTIC_SEARCH_URL=http://elastic:admin1234@elasticsearch_container:9200
+      - ELASTIC_APM_SERVER_URL=http://localhost:8200
+      - ELASTIC_APM_SECRET_TOKEN=
+    depends_on:
+      - elasticsearch
 networks: #Creating Common Network the communicate across services
   elastic: #Use this to use across service
     name: elastic
